@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentinelAI - Your Ultimate AI Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #000000; /* Fully Black Background */
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        #header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background: #ff6600;
+            box-shadow: 0px 4px 10px rgba(255, 100, 0, 0.5);
+        }
+        #logo {
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+        }
+        #chatbox {
+            width: 80%;
+            height: 400px;
+            margin: auto;
+            overflow-y: auto;
+            border: 2px solid #ff6600;
+            padding: 15px;
+            background-color: #222;
+            text-align: left;
+            border-radius: 10px;
+            max-width: 800px;
+            color: white;
+        }
+        input, button {
+            margin: 10px;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+        }
+        input {
+            width: 60%;
+        }
+        button {
+            cursor: pointer;
+            background-color: #ff6600;
+            color: white;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #cc5500;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/3/34/Helmet_logo.png" alt="Sentinel Helmet">
+        <h1>SentinelAI</h1>
+    </div>
+    <div id="chatbox"></div>
+    <input type="text" id="userInput" placeholder="Ask SentinelAI anything...">
+    <button onclick="sendMessage()">Send</button>
+    <button onclick="startVoice()">🎤 Speak</button>
+    
+    <script>
+        async function sendMessage() {
+            let userInput = document.getElementById("userInput").value;
+            document.getElementById("chatbox").innerHTML += `<p><b>You:</b> ${userInput}</p>`;
+            
+            let aiResponse = "";
+            if (userInput.toLowerCase() === "hi" || userInput.toLowerCase() === "hello") {
+                aiResponse = "Hello! How can I assist you today?";
+            } else if (userInput.toLowerCase() === "how are you") {
+                aiResponse = "I'm just a virtual assistant, but I'm doing great! How about you?";
+            } else {
+                aiResponse = "I'm still learning! Ask me anything else.";
+            }
+            
+            document.getElementById("chatbox").innerHTML += `<p><b>SentinelAI:</b> ${aiResponse}</p>`;
+            speakResponse(aiResponse);
+        }
+
+        function startVoice() {
+            let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "en-US";
+            recognition.start();
+            recognition.onresult = function(event) {
+                let speech = event.results[0][0].transcript;
+                document.getElementById("userInput").value = speech;
+                sendMessage();
+            };
+        }
+        
+        function speakResponse(text) {
+            let speech = new SpeechSynthesisUtterance(text);
+            speech.lang = "en-US";
+            window.speechSynthesis.speak(speech);
+        }
+    </script>
+</body>
+</html>
